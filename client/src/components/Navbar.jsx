@@ -89,11 +89,11 @@ const Navbar = ({ onHistoryClick }) => {
 
               {/* Email */}
               <a
-                href="mailto:pantaji@onlineprogram.com"
+                href="mailto:730551rinku@gmail.com"
                 className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm hover:bg-white/5 px-3 py-2 rounded-lg"
               >
                 <FiMail className="text-lg" />
-                pantaji@onlineprogram.com
+                730551rinku@gmail.com
               </a>
 
               {/* GitHub */}
@@ -142,11 +142,11 @@ const Navbar = ({ onHistoryClick }) => {
           </button>
 
           <a
-            href="mailto:pantaji@onlineprogram.com"
+            href="mailto:730551rinku@gmail.com"
             className="w-full flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
           >
             <FiMail className="text-xl text-pink-400" />
-            <span>pantaji@onlineprogram.com</span>
+            <span>730551rinku@gmail.com</span>
           </a>
 
           <a

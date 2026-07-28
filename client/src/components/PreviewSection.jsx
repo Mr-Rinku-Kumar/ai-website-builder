@@ -21,21 +21,32 @@ const PreviewSection = ({ html, loading, error, prompt, onRegenerate }) => {
   const [copied, setCopied] = useState(false);
   const [iframeError, setIframeError] = useState(false);
 
-  // ✅ Check HTML completeness
-  const isComplete = html?.includes('</html>');
-  const isCSSOnly = html?.includes(':root') && !html?.includes('<html>');
-  const isIncomplete = html && !isComplete;
-  const hasHtml = html && html.length > 0;
+  // ✅ IMPROVED: Better detection logic
+  const hasHtmlTag = html?.includes('<html');
+  const hasBodyTag = html?.includes('<body');
+  const hasDoctype = html?.includes('<!DOCTYPE');
+  const hasClosingHtml = html?.includes('</html>');
+  const hasStyleTag = html?.includes('<style');
+  
+  // ✅ TRUE CSS-Only: Only when there's NO html tag AND NO body tag BUT has style
+  const isCSSOnly = html && !hasHtmlTag && !hasBodyTag && hasStyleTag;
+  
+  // ✅ Complete HTML: Has doctype, html tag, body tag, and closing html
+  const isComplete = html && hasDoctype && hasHtmlTag && hasBodyTag && hasClosingHtml;
+  const isIncomplete = html && !isComplete && !isCSSOnly;
 
   // ✅ Debug log when html changes
   useEffect(() => {
     if (html) {
-      console.log('📄 Preview received HTML length:', html.length);
-      console.log('📄 HTML preview (first 200 chars):', html.substring(0, 200));
-      console.log('📄 Has DOCTYPE?', html.includes('<!DOCTYPE'));
-      console.log('📄 Has <style>?', html.includes('<style>'));
-      console.log('📄 Has <body>?', html.includes('<body>'));
-      console.log('📄 Has </html>?', html.includes('</html>'));
+      console.log('📄 HTML Analysis:');
+      console.log(`  - Length: ${html.length} chars`);
+      console.log(`  - Has DOCTYPE: ${hasDoctype}`);
+      console.log(`  - Has <html>: ${hasHtmlTag}`);
+      console.log(`  - Has <body>: ${hasBodyTag}`);
+      console.log(`  - Has <style>: ${hasStyleTag}`);
+      console.log(`  - Has </html>: ${hasClosingHtml}`);
+      console.log(`  - Is CSS Only: ${isCSSOnly}`);
+      console.log(`  - Is Complete: ${isComplete}`);
       
       if (isCSSOnly) {
         console.warn('⚠️ Response appears to be CSS-only!');
@@ -43,14 +54,14 @@ const PreviewSection = ({ html, loading, error, prompt, onRegenerate }) => {
       }
       
       if (isIncomplete) {
-        console.warn('⚠️ Response is incomplete - missing </html>');
+        console.warn('⚠️ Response is incomplete - missing required tags');
         toast('⚠️ Website generation was cut off. Try regenerating.', {
           icon: '✂️',
           duration: 4000,
         });
       }
     }
-  }, [html, isCSSOnly, isIncomplete]);
+  }, [html, hasDoctype, hasHtmlTag, hasBodyTag, hasStyleTag, hasClosingHtml, isCSSOnly, isComplete, isIncomplete]);
 
   const handleDownload = () => {
     if (!html) return;
@@ -222,7 +233,7 @@ const PreviewSection = ({ html, loading, error, prompt, onRegenerate }) => {
   // ✅ MAIN PREVIEW - Buttons ALWAYS SHOW
   return (
     <div className="space-y-4">
-      {/* ✅ Incomplete Warning */}
+      {/* ✅ Incomplete Warning - Only when truly incomplete */}
       {isIncomplete && (
         <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 text-yellow-400 text-sm flex items-start gap-3">
           <FiAlertTriangle className="text-xl flex-shrink-0 mt-0.5" />
