@@ -13,17 +13,12 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        secure: false,
-        // ✅ Increase timeout for large responses
-        configure: (proxy) => {
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            console.log('🔀 Proxying:', req.method, req.url);
-          });
-          proxy.on('proxyRes', (proxyRes, req, res) => {
-            console.log('🔀 Proxy response:', proxyRes.statusCode);
-          });
-        },
       },
     },
+  },
+  // ✅ Build configuration
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
   },
 });

@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+// ✅ Environment-aware API URL
+const getApiUrl = () => {
+  // In production, use the Render backend URL
+  if (import.meta.env.PROD) {
+    return import.meta.env.VITE_API_URL || 'https://ai-website-builder-y92h.onrender.com/api';
+  }
+  // In development, use proxy
+  return '/api';
+};
+
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,
