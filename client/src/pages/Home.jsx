@@ -378,7 +378,7 @@ const Home = () => {
                 <span className="text-blue-400">Node.js</span> &
                 <span className="text-emerald-400">Gemini AI</span>
               </p>
-              <p className="text-gray-500 text-xs mt-1">📧 730551rinku@gmail.com</p>
+              <p className="text-gray-500 text-xs mt-1">📧 @Rinku</p>
             </div>
             
             <div className="flex items-center gap-4">
